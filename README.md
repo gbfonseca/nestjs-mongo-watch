@@ -17,7 +17,7 @@ $ npm install
 
 ## Pre-Running
 ```bash
-  ./startdb.sh
+$ ./startdb.sh
 ```
 
 ## Running the app
