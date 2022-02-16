@@ -17,7 +17,7 @@ $ npm install
 
 ## Pre-Running
 ```bash
-  docker-compose up -d
+  ./startdb.sh
 ```
 
 ## Running the app
