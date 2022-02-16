@@ -1,0 +1,39 @@
+<html>
+
+<head>
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"
+    integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs" crossorigin="anonymous">
+  </script>
+  <script>
+    localStorage.setItem('token', '123456')
+    let token = '123'
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const myParam = urlParams.get('id');
+
+    console.log(myParam)
+
+    let socket = io('http://localhost:3000', {
+      query: {
+        token: myParam
+      }
+    });
+    socket.on('connect', function () {
+      console.log('Connected');
+    });
+    socket.emit('joinRoom', function (data) {
+      console.log('join Room', data)
+    })
+    socket.on('joinedRoom', function (data) {
+      console.log('joined Room', data)
+    })
+    socket.on('catsClient', function (data) {
+      console.log('catsClient', data);
+    });
+  </script>
+</head>
+
+<body>
+</body>
+
+</html

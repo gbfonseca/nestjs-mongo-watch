@@ -13,7 +13,8 @@ export class CatsController {
   async addCat(
     @Body() createCatDto: CreateCatDto
   ): Promise<Cat> {
-    return await this.catsService.create(createCatDto)
+    const data = await this.catsService.create(createCatDto)
+    return data
   }
 
   @Get()

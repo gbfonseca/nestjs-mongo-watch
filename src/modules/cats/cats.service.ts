@@ -1,37 +1,21 @@
-import { Model, ObjectId, } from 'mongoose';
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Model, } from 'mongoose';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cat, CatDocument } from './cat.schema';
 import { CreateCatDto } from './dto/create-cat.dto';
-import { Timestamp } from 'rxjs';
-
-type DataType = {
-  _id: {
-    _data: string
-  },
-  clusterTIme: Timestamp<{ t: number, i: number }>,
-  ns: {
-    db: string,
-    coll: string
-  },
-  documentKey: {
-    _id: ObjectId
-  },
-
-  fullDocument: {
-    _id: ObjectId,
-    age: number;
-    name: string;
-    breed: string
-  }
-}
+import { DataType } from './types/DataType';
+import { CatsGateway } from './cats.gateway';
 
 @Injectable()
 export class CatsService implements OnModuleInit {
-  constructor(@InjectModel(Cat.name) private catModel: Model<CatDocument>) { }
+  constructor(@InjectModel(Cat.name) private catModel: Model<CatDocument>, private readonly catsGateway: CatsGateway) { }
+  private logger: Logger = new Logger('Database Changes')
+
   onModuleInit() {
     this.catModel.watch().on('change', (data: DataType) => {
-      console.log(data.fullDocument)
+      this.logger.log('Change data')
+      this.catsGateway.broadcastAll(data.fullDocument)
+      // this.catsGateway.server.to(data.fullDocument.user_id).emit('catsClient', { data: data.fullDocument })
     })
   }
 
@@ -43,4 +27,9 @@ export class CatsService implements OnModuleInit {
   async findAll(): Promise<Cat[]> {
     return this.catModel.find().exec();
   }
+
+  async findByUserId(_id: any): Promise<Cat[]> {
+    return this.catModel.find({ user_id: _id }).exec();
+  }
+
 }

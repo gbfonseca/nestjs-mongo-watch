@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CatsModule } from './modules/cats/cats.module';
+import { CatsGateway } from './modules/cats/cats.gateway';
 
 @Module({
   imports: [
